@@ -82,6 +82,33 @@ def mha_prefill(
         sinks=sinks,
         return_lse=return_lse,
     )
+    # CANN 9.0 TND accepts head dimensions 64/128/192. Qwen3.5 uses
+    # 256, supported in BNSD. Preserve each packed request's causal boundary.
+    if q.shape[-1] == 256:
+        outputs = []
+        for start, stop in zip(cu_seqlens_cpu[:-1], cu_seqlens_cpu[1:]):
+            if start == stop:
+                continue
+            query, key, value = [
+                tensor[start:stop].transpose(0, 1).unsqueeze(0).contiguous()
+                for tensor in (q, k, v)
+            ]
+            length = stop - start
+            mask = torch.ones(length, length, dtype=torch.bool, device=q.device).triu(1)
+            result, _ = torch_npu.npu_fused_infer_attention_score(
+                query,
+                key,
+                value,
+                atten_mask=mask,
+                num_heads=q.shape[1],
+                num_key_value_heads=k.shape[1],
+                scale=_scale(q, softmax_scale),
+                input_layout="BNSD",
+                sparse_mode=0,
+            )
+            outputs.append(result.squeeze(0).transpose(0, 1))
+        return torch.cat(outputs, dim=0) if outputs else torch.empty_like(q)
+
     output, _ = torch_npu.npu_fused_infer_attention_score(
         q,
         k,

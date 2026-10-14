@@ -22,7 +22,12 @@
 
 import triton
 from triton import language as tl
-from triton import profiler as proton
+
+try:
+    from triton import profiler as proton
+except ImportError:
+    # Some Triton-Ascend releases omit Proton; execution does not require it.
+    proton = None
 from triton.language.extra import libdevice
 
 
@@ -32,10 +37,12 @@ def _unsupported_pdl_noop():
     pass
 
 
-if not hasattr(tl.extra.cuda, "gdc_wait"):
-    tl.extra.cuda.gdc_wait = _unsupported_pdl_noop
-if not hasattr(tl.extra.cuda, "gdc_launch_dependents"):
-    tl.extra.cuda.gdc_launch_dependents = _unsupported_pdl_noop
+# Ascend-only wheels can omit the CUDA namespace entirely.
+if hasattr(tl.extra, "cuda"):
+    if not hasattr(tl.extra.cuda, "gdc_wait"):
+        tl.extra.cuda.gdc_wait = _unsupported_pdl_noop
+    if not hasattr(tl.extra.cuda, "gdc_launch_dependents"):
+        tl.extra.cuda.gdc_launch_dependents = _unsupported_pdl_noop
 
 
 __all__ = ["libdevice", "proton", "tl", "triton"]

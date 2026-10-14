@@ -28,13 +28,19 @@ import importlib.abc
 import importlib.util
 import sys
 
-import tokenspeed_triton.experimental.gluon.language as gl
 import torch
-from tokenspeed_triton.experimental import gluon
-from tokenspeed_triton.language.core import _aggregate as aggregate
-from tokenspeed_triton.tools.tensor_descriptor import TensorDescriptor
 
 _IS_NPU = hasattr(torch, "npu") and torch.npu.is_available()
+
+# Preserve GPU helper symbols when the distribution is installed, while
+# allowing pure Ascend wheels to bootstrap the kernel package without it.
+if _IS_NPU and importlib.util.find_spec("tokenspeed_triton") is None:
+    gl = gluon = aggregate = TensorDescriptor = None
+else:
+    import tokenspeed_triton.experimental.gluon.language as gl
+    from tokenspeed_triton.experimental import gluon
+    from tokenspeed_triton.language.core import _aggregate as aggregate
+    from tokenspeed_triton.tools.tensor_descriptor import TensorDescriptor
 
 if _IS_NPU:
     from tokenspeed_kernel_npu._triton import libdevice, proton, tl, triton
