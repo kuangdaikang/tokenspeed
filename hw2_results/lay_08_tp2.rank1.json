@@ -1,0 +1,12 @@
+{
+  "mode": "layers",
+  "rank": 1,
+  "physical_chip": "5",
+  "seq_len": 5,
+  "layers": 24,
+  "hidden_shape": [
+    24,
+    1,
+    1024
+  ]
+}

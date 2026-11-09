@@ -1,0 +1,265 @@
+{
+  "mode": "perf",
+  "model_dir": "/home/u2601213479/models/Qwen3.5-0.8B",
+  "seq_len": 512,
+  "batch": 1,
+  "steps": 2,
+  "overlap": false,
+  "prompt_tokens": [
+    95983,
+    95983
+  ],
+  "prefill_s": 0.08970943000167608,
+  "decode_s": 0.039021320175379515,
+  "decode_steps": 1,
+  "timeline": [],
+  "decode_timeline": [],
+  "tokens": [
+    95983,
+    95983
+  ],
+  "rank": 1,
+  "physical_chip": "5",
+  "visible_devices": "5",
+  "logical_device": "0",
+  "device_count": 1,
+  "allocated_bytes": 1165078016,
+  "reserved_bytes": 1228931072,
+  "parameter_bytes": 1006622336,
+  "shard_shapes": {
+    "layer0.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer0.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "mlp.down": [
+      1024,
+      1792
+    ],
+    "mlp.gate": [
+      1792,
+      1024
+    ],
+    "layer1.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer1.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer2.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer2.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer3.q_proj": [
+      2048,
+      1024
+    ],
+    "layer3.k_proj": [
+      256,
+      1024
+    ],
+    "layer4.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer4.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer5.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer5.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer6.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer6.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer7.q_proj": [
+      2048,
+      1024
+    ],
+    "layer7.k_proj": [
+      256,
+      1024
+    ],
+    "layer8.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer8.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer9.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer9.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer10.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer10.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer11.q_proj": [
+      2048,
+      1024
+    ],
+    "layer11.k_proj": [
+      256,
+      1024
+    ],
+    "layer12.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer12.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer13.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer13.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer14.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer14.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer15.q_proj": [
+      2048,
+      1024
+    ],
+    "layer15.k_proj": [
+      256,
+      1024
+    ],
+    "layer16.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer16.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer17.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer17.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer18.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer18.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer19.q_proj": [
+      2048,
+      1024
+    ],
+    "layer19.k_proj": [
+      256,
+      1024
+    ],
+    "layer20.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer20.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer21.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer21.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer22.gdn_out": [
+      1024,
+      1024
+    ],
+    "layer22.gdn_conv": [
+      3072,
+      1,
+      4
+    ],
+    "layer23.q_proj": [
+      2048,
+      1024
+    ],
+    "layer23.k_proj": [
+      256,
+      1024
+    ],
+    "embed": [
+      248320,
+      1024
+    ]
+  },
+  "comm_count": 0,
+  "comm_payload_bytes": 0,
+  "kv_bytes": 3151872,
+  "conv_bytes": 442368,
+  "gdn_state_bytes": 9437184,
+  "prefill_ms": 89.70943000167608,
+  "tpot_ms": 39.021320175379515,
+  "e2e_tokens_per_s": 3992.8299904494233,
+  "decode_tokens_per_s": 25.62701609032053,
+  "aggregate_decode_tokens_per_s": 25.62701609032053,
+  "prefill_tokens_per_s": 5707.315273215247,
+  "text": "都都"
+}

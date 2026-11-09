@@ -18,9 +18,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Distributed runtime public exports."""
+"""Distributed runtime public exports.
 
-from tokenspeed.runtime.distributed.comm_manager import CommManager
-from tokenspeed.runtime.distributed.mapping import Mapping
+Submodules such as the HCCL backend can be imported without pulling the
+serving communication stack.
+"""
 
 __all__ = ["CommManager", "Mapping"]
+
+
+def __getattr__(name):
+    if name == "CommManager":
+        from tokenspeed.runtime.distributed.comm_manager import CommManager
+
+        return CommManager
+    if name == "Mapping":
+        from tokenspeed.runtime.distributed.mapping import Mapping
+
+        return Mapping
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

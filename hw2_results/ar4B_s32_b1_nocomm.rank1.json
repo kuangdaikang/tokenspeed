@@ -1,0 +1,335 @@
+{
+  "mode": "perf",
+  "model_dir": "/home/u2601213479/models/Qwen3.5-4B",
+  "seq_len": 32,
+  "batch": 1,
+  "steps": 2,
+  "overlap": false,
+  "prompt_tokens": [
+    95761,
+    95860
+  ],
+  "prefill_s": 0.0935958200134337,
+  "decode_s": 0.05357382958754897,
+  "decode_steps": 1,
+  "timeline": [],
+  "decode_timeline": [],
+  "tokens": [
+    95761,
+    95860
+  ],
+  "rank": 1,
+  "physical_chip": "5",
+  "visible_devices": "5",
+  "logical_device": "0",
+  "device_count": 1,
+  "allocated_bytes": 4910484480,
+  "reserved_bytes": 5194645504,
+  "parameter_bytes": 4841284608,
+  "shard_shapes": {
+    "layer0.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer0.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "mlp.down": [
+      2560,
+      4608
+    ],
+    "mlp.gate": [
+      4608,
+      2560
+    ],
+    "layer1.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer1.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer2.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer2.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer3.q_proj": [
+      4096,
+      2560
+    ],
+    "layer3.k_proj": [
+      512,
+      2560
+    ],
+    "layer4.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer4.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer5.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer5.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer6.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer6.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer7.q_proj": [
+      4096,
+      2560
+    ],
+    "layer7.k_proj": [
+      512,
+      2560
+    ],
+    "layer8.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer8.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer9.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer9.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer10.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer10.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer11.q_proj": [
+      4096,
+      2560
+    ],
+    "layer11.k_proj": [
+      512,
+      2560
+    ],
+    "layer12.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer12.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer13.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer13.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer14.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer14.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer15.q_proj": [
+      4096,
+      2560
+    ],
+    "layer15.k_proj": [
+      512,
+      2560
+    ],
+    "layer16.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer16.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer17.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer17.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer18.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer18.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer19.q_proj": [
+      4096,
+      2560
+    ],
+    "layer19.k_proj": [
+      512,
+      2560
+    ],
+    "layer20.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer20.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer21.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer21.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer22.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer22.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer23.q_proj": [
+      4096,
+      2560
+    ],
+    "layer23.k_proj": [
+      512,
+      2560
+    ],
+    "layer24.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer24.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer25.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer25.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer26.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer26.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer27.q_proj": [
+      4096,
+      2560
+    ],
+    "layer27.k_proj": [
+      512,
+      2560
+    ],
+    "layer28.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer28.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer29.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer29.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer30.gdn_out": [
+      2560,
+      2048
+    ],
+    "layer30.gdn_conv": [
+      4096,
+      1,
+      4
+    ],
+    "layer31.q_proj": [
+      4096,
+      2560
+    ],
+    "layer31.k_proj": [
+      512,
+      2560
+    ],
+    "embed": [
+      248320,
+      2560
+    ]
+  },
+  "comm_count": 0,
+  "comm_payload_bytes": 0,
+  "kv_bytes": 540672,
+  "conv_bytes": 786432,
+  "gdn_state_bytes": 25165824,
+  "prefill_ms": 93.5958200134337,
+  "tpot_ms": 53.57382958754897,
+  "e2e_tokens_per_s": 231.02589489193824,
+  "decode_tokens_per_s": 18.66583008343329,
+  "aggregate_decode_tokens_per_s": 18.66583008343329,
+  "prefill_tokens_per_s": 341.8956102463452,
+  "text": "是来"
+}
