@@ -1,0 +1,292 @@
+{
+  "mode": "perf",
+  "model_dir": "/home/u2601213479/models/Qwen3.5-0.8B",
+  "seq_len": 32,
+  "batch": 4,
+  "steps": 16,
+  "overlap": false,
+  "prompt_tokens": [
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431
+  ],
+  "prefill_s": 0.06117034982889891,
+  "decode_s": 0.5394829702563584,
+  "decode_steps": 15,
+  "timeline": [],
+  "decode_timeline": [],
+  "tokens": [
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431,
+    114006,
+    1710,
+    139054,
+    110827,
+    97431
+  ],
+  "rank": 0,
+  "physical_chip": "1",
+  "visible_devices": "1",
+  "logical_device": "0",
+  "device_count": 1,
+  "allocated_bytes": 1651414016,
+  "reserved_bytes": 1751121920,
+  "parameter_bytes": 1504680704,
+  "shard_shapes": {
+    "layer0.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer0.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "mlp.down": [
+      1024,
+      3584
+    ],
+    "mlp.gate": [
+      3584,
+      1024
+    ],
+    "layer1.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer1.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer2.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer2.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer3.q_proj": [
+      4096,
+      1024
+    ],
+    "layer3.k_proj": [
+      512,
+      1024
+    ],
+    "layer4.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer4.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer5.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer5.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer6.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer6.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer7.q_proj": [
+      4096,
+      1024
+    ],
+    "layer7.k_proj": [
+      512,
+      1024
+    ],
+    "layer8.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer8.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer9.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer9.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer10.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer10.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer11.q_proj": [
+      4096,
+      1024
+    ],
+    "layer11.k_proj": [
+      512,
+      1024
+    ],
+    "layer12.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer12.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer13.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer13.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer14.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer14.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer15.q_proj": [
+      4096,
+      1024
+    ],
+    "layer15.k_proj": [
+      512,
+      1024
+    ],
+    "layer16.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer16.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer17.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer17.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer18.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer18.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer19.q_proj": [
+      4096,
+      1024
+    ],
+    "layer19.k_proj": [
+      512,
+      1024
+    ],
+    "layer20.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer20.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer21.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer21.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer22.gdn_out": [
+      1024,
+      2048
+    ],
+    "layer22.gdn_conv": [
+      6144,
+      1,
+      4
+    ],
+    "layer23.q_proj": [
+      4096,
+      1024
+    ],
+    "layer23.k_proj": [
+      512,
+      1024
+    ],
+    "embed": [
+      248320,
+      1024
+    ]
+  },
+  "comm_count": 0,
+  "comm_payload_bytes": 0,
+  "kv_bytes": 2310144,
+  "conv_bytes": 3538944,
+  "gdn_state_bytes": 75497472,
+  "prefill_ms": 61.17034982889891,
+  "tpot_ms": 35.965531350423895,
+  "e2e_tokens_per_s": 319.65194161042405,
+  "decode_tokens_per_s": 27.804399447256152,
+  "prefill_tokens_per_s": 2092.517050466966,
+  "text": "介绍北京大学。请用一句话介绍北京大学。请用一句话介绍北京大学。请用一句话介绍"
+}

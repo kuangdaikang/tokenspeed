@@ -1,0 +1,11 @@
+{
+  "rank": 0,
+  "physical_chip": "4",
+  "left_nrmse": 0.0,
+  "right_nrmse": 0.0,
+  "left_top1": true,
+  "right_top1": true,
+  "state_rows": 2,
+  "state_independent": true,
+  "ranks_agree": true
+}

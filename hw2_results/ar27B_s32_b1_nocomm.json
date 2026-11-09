@@ -1,0 +1,615 @@
+{
+  "mode": "perf",
+  "model_dir": "/home/u2601213479/models/Qwen3.5-27B",
+  "seq_len": 32,
+  "batch": 1,
+  "steps": 2,
+  "overlap": false,
+  "prompt_tokens": [
+    97431,
+    13
+  ],
+  "prefill_s": 0.19447406008839607,
+  "decode_s": 0.11300414009019732,
+  "decode_steps": 1,
+  "timeline": [],
+  "decode_timeline": [],
+  "tokens": [
+    97431,
+    13
+  ],
+  "rank": 0,
+  "physical_chip": "4",
+  "visible_devices": "4",
+  "logical_device": "0",
+  "device_count": 1,
+  "allocated_bytes": 29761327616,
+  "reserved_bytes": 30027022336,
+  "parameter_bytes": 29438137344,
+  "shard_shapes": {
+    "layer0.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer0.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "mlp.down": [
+      5120,
+      8704
+    ],
+    "mlp.gate": [
+      8704,
+      5120
+    ],
+    "layer1.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer1.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer2.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer2.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer3.q_proj": [
+      6144,
+      5120
+    ],
+    "layer3.k_proj": [
+      512,
+      5120
+    ],
+    "layer4.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer4.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer5.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer5.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer6.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer6.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer7.q_proj": [
+      6144,
+      5120
+    ],
+    "layer7.k_proj": [
+      512,
+      5120
+    ],
+    "layer8.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer8.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer9.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer9.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer10.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer10.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer11.q_proj": [
+      6144,
+      5120
+    ],
+    "layer11.k_proj": [
+      512,
+      5120
+    ],
+    "layer12.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer12.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer13.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer13.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer14.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer14.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer15.q_proj": [
+      6144,
+      5120
+    ],
+    "layer15.k_proj": [
+      512,
+      5120
+    ],
+    "layer16.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer16.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer17.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer17.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer18.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer18.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer19.q_proj": [
+      6144,
+      5120
+    ],
+    "layer19.k_proj": [
+      512,
+      5120
+    ],
+    "layer20.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer20.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer21.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer21.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer22.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer22.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer23.q_proj": [
+      6144,
+      5120
+    ],
+    "layer23.k_proj": [
+      512,
+      5120
+    ],
+    "layer24.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer24.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer25.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer25.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer26.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer26.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer27.q_proj": [
+      6144,
+      5120
+    ],
+    "layer27.k_proj": [
+      512,
+      5120
+    ],
+    "layer28.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer28.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer29.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer29.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer30.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer30.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer31.q_proj": [
+      6144,
+      5120
+    ],
+    "layer31.k_proj": [
+      512,
+      5120
+    ],
+    "layer32.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer32.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer33.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer33.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer34.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer34.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer35.q_proj": [
+      6144,
+      5120
+    ],
+    "layer35.k_proj": [
+      512,
+      5120
+    ],
+    "layer36.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer36.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer37.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer37.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer38.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer38.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer39.q_proj": [
+      6144,
+      5120
+    ],
+    "layer39.k_proj": [
+      512,
+      5120
+    ],
+    "layer40.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer40.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer41.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer41.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer42.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer42.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer43.q_proj": [
+      6144,
+      5120
+    ],
+    "layer43.k_proj": [
+      512,
+      5120
+    ],
+    "layer44.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer44.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer45.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer45.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer46.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer46.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer47.q_proj": [
+      6144,
+      5120
+    ],
+    "layer47.k_proj": [
+      512,
+      5120
+    ],
+    "layer48.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer48.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer49.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer49.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer50.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer50.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer51.q_proj": [
+      6144,
+      5120
+    ],
+    "layer51.k_proj": [
+      512,
+      5120
+    ],
+    "layer52.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer52.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer53.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer53.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer54.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer54.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer55.q_proj": [
+      6144,
+      5120
+    ],
+    "layer55.k_proj": [
+      512,
+      5120
+    ],
+    "layer56.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer56.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer57.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer57.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer58.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer58.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer59.q_proj": [
+      6144,
+      5120
+    ],
+    "layer59.k_proj": [
+      512,
+      5120
+    ],
+    "layer60.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer60.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer61.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer61.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer62.gdn_out": [
+      5120,
+      3072
+    ],
+    "layer62.gdn_conv": [
+      5120,
+      1,
+      4
+    ],
+    "layer63.q_proj": [
+      6144,
+      5120
+    ],
+    "layer63.k_proj": [
+      512,
+      5120
+    ],
+    "embed": [
+      248320,
+      5120
+    ]
+  },
+  "comm_count": 0,
+  "comm_payload_bytes": 0,
+  "kv_bytes": 1081344,
+  "conv_bytes": 1966080,
+  "gdn_state_bytes": 75497472,
+  "prefill_ms": 194.47406008839607,
+  "tpot_ms": 113.00414009019732,
+  "e2e_tokens_per_s": 110.57694490292869,
+  "decode_tokens_per_s": 8.849233304211888,
+  "aggregate_decode_tokens_per_s": 8.849233304211888,
+  "prefill_tokens_per_s": 164.54636667458246,
+  "text": "介绍."
+}
