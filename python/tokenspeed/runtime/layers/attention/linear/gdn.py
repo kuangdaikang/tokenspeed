@@ -67,6 +67,12 @@ def fused_gdn_gating(
     beta: float = 1.0,
     threshold: float = 20.0,
 ) -> torch.Tensor:
+    if a.device.type == "npu":
+        decay = torch.nn.functional.softplus(
+            a.float() + dt_bias.float(), beta=beta, threshold=threshold
+        )
+        return -A_log.float().exp() * decay
+
     enable_pdl = pdl_enabled()
     batch, num_heads = a.shape
     seq_len = 1

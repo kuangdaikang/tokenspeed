@@ -275,6 +275,12 @@ def sigmoid_mul(
     if n == 0:
         return x
 
+    if x.device.type == "npu":
+        values = gate.float().reshape(num_tokens, -1, head_dim)
+        if head_bias is not None:
+            values = values + head_bias.float().view(1, -1, 1)
+        return x.mul_(values.sigmoid().reshape_as(x))
+
     BLOCK_SIZE = 1024
     grid = ((n + BLOCK_SIZE - 1) // BLOCK_SIZE,)
     enable_pdl = pdl_enabled()

@@ -106,6 +106,10 @@ public:
     std::int32_t HostPoolCachedBlocks() const { return coordinator_.NumHostCachedBlocks(); }
     std::int32_t HostPoolFreeBlocks() const { return coordinator_.NumFreeHostLcmBlocks(); }
     std::int32_t HostPoolPinnedBlocks() const { return coordinator_.NumPinnedHostCachedBlocks(); }
+    std::int32_t HostPoolUsedLcmBlocks() const { return coordinator_.NumUsedHostLcmBlocks(); }
+    std::uint64_t HostEvictions() const { return coordinator_.HostEvictions(); }
+    std::uint64_t HostPrefixHits() const { return host_prefix_hits_; }
+    std::uint64_t HostPrefixMisses() const { return host_prefix_misses_; }
     // Published tail boundaries the probe can enumerate, and how many the
     // per-prior cap has dropped since start.
     std::size_t TailEntries() const { return coordinator_.NumTailEntries(); }
@@ -481,6 +485,8 @@ private:
     // order the coordinator touches pages (evictions run suffix-first), so
     // this order carries no meaning; DrainKvEvents sorts the batch.
     std::vector<CacheKey> kv_event_boundaries_to_reconcile_;
+    std::uint64_t host_prefix_hits_{0};
+    std::uint64_t host_prefix_misses_{0};
 };
 
 }  // namespace tokenspeed

@@ -1,0 +1,107 @@
+{
+  "config": {
+    "model": "$HOME/models/Qwen3.5-4B",
+    "case": "resume",
+    "tp": 2,
+    "device_tokens": 16384,
+    "host_ratio": 2.0,
+    "snapshot_ratio": 1.0,
+    "force_retraction_interval": 3,
+    "prompt_tokens": 260,
+    "steps": 12,
+    "requests": 12,
+    "locality": 4,
+    "port": 31944,
+    "logprobs": false,
+    "output": "hw3_results/4B-tp2-resume.json"
+  },
+  "duration_s": 3.1122018597088754,
+  "median_ttft_ms": 515.6183997169137,
+  "output_tokens_per_s": 7.7115820508651165,
+  "completed": 2,
+  "scheduler_rss_bytes": 0,
+  "requests": [
+    {
+      "label": "A",
+      "request_id": "7e38979a13be414c8e2139236e6201ba",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 12
+      },
+      "token_ids": [
+        220,
+        16,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "logprobs": [],
+      "ttft_ms": 471.067669801414,
+      "latency_ms": 3111.4565399475396,
+      "token_arrival_ms": [
+        471.067669801414,
+        585.1898100227118,
+        1314.5914399065077,
+        1640.3052601963282,
+        1984.904060140252,
+        2335.1935502141714,
+        2467.106489930302,
+        2597.0703698694706,
+        2726.690399926156,
+        2856.978809926659,
+        2986.4353598095477,
+        3111.4477701485157
+      ]
+    },
+    {
+      "label": "B",
+      "request_id": "b6109eff2b84482bb6d1dec306eb863b",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 12
+      },
+      "token_ids": [
+        8,
+        220,
+        16,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "logprobs": [],
+      "ttft_ms": 560.1691296324134,
+      "latency_ms": 1854.8020799644291,
+      "token_arrival_ms": [
+        560.1691296324134,
+        674.1856797598302,
+        834.0775296092033,
+        943.032689858228,
+        1053.1497299671173,
+        1159.8352598957717,
+        1269.020269624889,
+        1385.581819806248,
+        1504.2719398625195,
+        1622.080419678241,
+        1740.6294597312808,
+        1854.7939099371433
+      ]
+    }
+  ]
+}

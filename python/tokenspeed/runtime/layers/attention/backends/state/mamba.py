@@ -1788,11 +1788,13 @@ class MambaAttnBackend(AttentionBackend):
         # KDA's verify consumes zero-copy strided views. When recurrent-state
         # replay is enabled, the split kernel also saves the persistent inputs
         # needed to reconstruct accepted state later.
-        if (
-            self._verify_packed_qkv_views
-            and replay_inputs is None
-            and mixed_qkv.stride(-1) == 1
-            and is_target_verify
+        if replay_inputs is None and (
+            mixed_qkv.device.type == "npu"
+            or (
+                self._verify_packed_qkv_views
+                and mixed_qkv.stride(-1) == 1
+                and is_target_verify
+            )
         ):
             query, key, value = _packed_qkv_views(
                 mixed_qkv,

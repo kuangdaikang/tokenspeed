@@ -392,6 +392,13 @@ Scheduler::FirstChunkOutcome Scheduler::schedulePrefillFirstChunk(ExecutionPlan&
             "an admission claims exactly the prefix it probed");
     _assert(admission->junction_tokens == junction_tokens, "the junction changed between probe and admission");
     recordAdmittedPages(plan, *admission);
+    if (config_.StreamsDeviceCacheToHost() && !config_.disable_prefix_cache) {
+        if (!admission->load_pairs.empty()) {
+            ++host_prefix_hits_;
+        } else if (hit_tokens == 0) {
+            ++host_prefix_misses_;
+        }
+    }
 
     if (!match.extension_hashes.empty()) {
         // The Host-warm H2D destinations of full pages are filled on Host

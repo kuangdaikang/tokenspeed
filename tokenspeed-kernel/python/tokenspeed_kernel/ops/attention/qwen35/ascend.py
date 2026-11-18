@@ -21,7 +21,13 @@
 """Explicit Ascend boundary for the single-request Qwen3.5 adapter."""
 
 import torch_npu
-from tokenspeed_kernel_npu.ops.gdn import causal_conv, gdn_chunk, gdn_recurrent
+from tokenspeed_kernel_npu.ops.gdn import (
+    causal_conv,
+    causal_conv_paged_prefill,
+    causal_conv_paged_update,
+    gdn_chunk,
+    gdn_recurrent,
+)
 from tokenspeed_kernel_npu.ops.layernorm import rmsnorm
 from tokenspeed_kernel_npu.ops.mha import mha_prefill
 
@@ -44,6 +50,8 @@ def mha_cached(q, k, v, *, mask, scale):
 
 __all__ = [
     "causal_conv",
+    "causal_conv_paged_prefill",
+    "causal_conv_paged_update",
     "gdn_chunk",
     "gdn_recurrent",
     "rmsnorm",

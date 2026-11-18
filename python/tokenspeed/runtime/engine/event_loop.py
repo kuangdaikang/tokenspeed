@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 import faulthandler
+import json
 import os
 import signal
 import sys
@@ -1080,6 +1081,31 @@ class EventLoop:
         )
         self.metrics.record_jit_compiles(compile_stats())
 
+    def _log_cache_tiers(self, plan, forward_op, stats):
+        total = self._scheduler_cache_geometry.num_usable_pages
+        trace = dict(
+            rank=self.attn_tp_rank,
+            device_total_lcm_blocks=total,
+            device_used_lcm_blocks=stats["num_active_pages"]
+            + stats["num_cached_pages"],
+            device_available_lcm_blocks=self.scheduler.available_lcm_blocks(),
+            host_used_lcm_blocks=self.scheduler.host_pool_used_lcm_blocks(),
+            host_pinned_blocks=self.scheduler.host_pool_pinned_blocks(),
+            snapshot_free_lcm_blocks=self.scheduler.snapshot_pool_free_blocks(),
+            retracted_requests=self.scheduler.retracted_size(),
+            host_prefix_hits=self.scheduler.host_prefix_hits(),
+            host_prefix_misses=self.scheduler.host_prefix_misses(),
+            host_evictions=self.scheduler.host_evictions(),
+            new_device_pages=plan.pages_to_zero,
+        )
+        if forward_op is not None:
+            trace.update(
+                request_ids=forward_op.request_ids,
+                input_lengths=forward_op.input_lengths,
+                extend_prefix_lens=forward_op.extend_prefix_lens,
+            )
+        logger.info(f"[cache_tiers] {json.dumps(trace)}")
+
     # ------------------------------------------------------------------
     # Event loops
     # ------------------------------------------------------------------
@@ -1142,6 +1168,7 @@ class EventLoop:
         """
         in_flight: deque = deque()
         depth = self.in_flight_depth
+        trace_cache = envs.TOKENSPEED_HOST_CACHE_TRACE.get()
         with maybe_control_plane_guard():
             while not self._shutdown_complete():
                 self._process_new_requests()
@@ -1194,6 +1221,8 @@ class EventLoop:
 
                     forward_op = self._get_forward_op(execution_plan)
                     stats = self._get_scheduler_stats()
+                    if trace_cache and (cache_events or forward_op is not None):
+                        self._log_cache_tiers(execution_plan, forward_op, stats)
                     self.load_reporter.observe(stats, self._num_running())
                     num_iter_tokens = (
                         sum(forward_op.input_lengths) if forward_op is not None else 0

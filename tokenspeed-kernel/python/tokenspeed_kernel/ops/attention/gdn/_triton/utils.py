@@ -34,6 +34,7 @@ from typing import Any, NoReturn
 import torch
 from packaging import version
 from tokenspeed_kernel._triton import triton
+from tokenspeed_kernel.platform import current_platform
 
 SUPPRESS_LEVEL = int(os.getenv("GDN_RECOMPUTE_SUPPRESS_LEVEL", "0"))
 
@@ -131,6 +132,8 @@ def _triton_backend_unavailable(cause: Exception) -> NoReturn:
 
 @functools.cache
 def get_available_device() -> str:
+    if current_platform().is_npu:
+        return "npu"
     try:
         return triton.runtime.driver.active.get_current_target().backend
     except Exception as e:
@@ -168,6 +171,8 @@ class Backend(Enum):
 
 @functools.cache
 def check_shared_mem(arch: str = "none", tensor_idx: int = 0) -> bool:
+    if device == "npu":
+        return False
     try:
         device_shared_mem_list = get_all_max_shared_mem()
         max_shared_memory = device_shared_mem_list[tensor_idx]

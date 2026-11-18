@@ -351,6 +351,10 @@ public:
     std::optional<AdmissionResult> Restore(const RetractionImage& snapshot, std::span<const GroupDemand> demands,
                                            std::uint64_t request_access_epoch);
     bool HasHostPool() const { return host_pool_ != nullptr; }
+    std::int32_t NumUsedHostLcmBlocks() const {
+        return host_pool_ == nullptr ? 0 : host_pool_->NumLcmBlocks() - host_pool_->NumEmptyLcmBlocks();
+    }
+    std::uint64_t HostEvictions() const { return host_evictions_; }
     bool HasSnapshotPool() const { return snapshot_pool_ != nullptr; }
     std::int32_t NumFreeSnapshotLcmBlocks() const {
         return snapshot_pool_ == nullptr ? 0 : snapshot_pool_->NumEmptyLcmBlocks();
@@ -626,6 +630,7 @@ private:
     std::int32_t prefix_granularity_{0};
     std::int32_t replay_window_tokens_{0};
     std::uint64_t next_access_epoch_{0};
+    std::uint64_t host_evictions_{0};
     TailTable tails_;
     std::vector<StoreCandidate> pending_stores_;
     std::unordered_set<CacheKey, CacheKeyHash> storage_keys_;

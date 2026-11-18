@@ -518,6 +518,13 @@ NB_MODULE(tokenspeed_scheduler_ext, m) {
              "suspended request's image).")
         .def("host_pool_pinned_blocks", &tokenspeed::Scheduler::HostPoolPinnedBlocks,
              "Host L2 entries pinned by a request -- a suspended request's image, or an in-flight transfer.")
+        .def("host_pool_used_lcm_blocks", &tokenspeed::Scheduler::HostPoolUsedLcmBlocks)
+        .def("host_evictions", &tokenspeed::Scheduler::HostEvictions,
+             "Count Host L2 cache entries reclaimed for capacity.")
+        .def("host_prefix_hits", &tokenspeed::Scheduler::HostPrefixHits,
+             "Count admitted requests that load at least one Host L2 prefix block.")
+        .def("host_prefix_misses", &tokenspeed::Scheduler::HostPrefixMisses,
+             "Count admitted requests with neither a Device nor a Host prefix when Host L2 is enabled.")
         .def("tail_entries", &tokenspeed::Scheduler::TailEntries,
              "Published partial-page boundaries (hash@T) the prefix probe can resume at.")
         .def("tail_cap_evictions", &tokenspeed::Scheduler::TailCapEvictions,

@@ -1841,6 +1841,14 @@ def store_kv_cache(
     assert k_src.stride(-1) == 1 and v_src.stride(-1) == 1
     assert k_dst.stride(-1) == 1 and v_dst.stride(-1) == 1
 
+    if k_dst.device.type == "npu":
+        if enable_pdl:
+            raise ValueError("Ascend KV scatter requires PDL to be disabled")
+        indices = loc.long()
+        k_dst.index_copy_(0, indices, k_src.to(k_dst.dtype))
+        v_dst.index_copy_(0, indices, v_src.to(v_dst.dtype))
+        return
+
     k_src_stride = k_src.stride(0) if k_src.dim() > 1 else k_src.shape[-1]
     v_src_stride = v_src.stride(0) if v_src.dim() > 1 else v_src.shape[-1]
     k_dst_stride = k_dst.stride(0) if k_dst.dim() > 1 else k_dst.shape[-1]

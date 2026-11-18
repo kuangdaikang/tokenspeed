@@ -51,9 +51,6 @@ from tokenspeed_kernel.ops.attention.gdn._triton.causal_conv1d_metadata import (
     build_causal_conv1d_prefill_metadata,
     refresh_causal_conv1d_capacity_metadata,
 )
-from tokenspeed_kernel.ops.attention.gdn._triton.chunk import (
-    chunk_gated_delta_rule,
-)
 from tokenspeed_kernel.ops.attention.gdn._triton.chunk_delta_h import CHUNK_SIZE
 from tokenspeed_kernel.ops.attention.gdn._triton.index import (
     prepare_chunk_indices,
@@ -104,6 +101,10 @@ def triton_gdn_chunk_prefill(
     output_final_state: bool = True,
     output_h: bool = False,
 ) -> GdnChunkPrefillResult:
+    from tokenspeed_kernel.ops.attention.gdn._triton.chunk import (
+        chunk_gated_delta_rule,
+    )
+
     # initial_state arrives K-last [N, H, V, K] (the shared contract); this
     # backend's FLA math needs [N, H, K, V], so transpose in (materialized:
     # the Triton kernel below has no dynamic-stride support for h0).

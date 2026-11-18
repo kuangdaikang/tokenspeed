@@ -1,0 +1,325 @@
+{
+  "config": {
+    "model": "$HOME/models/Qwen3.5-0.8B",
+    "case": "high",
+    "tp": 1,
+    "device_tokens": 12288,
+    "host_ratio": 0.0,
+    "snapshot_ratio": 0.0,
+    "force_retraction_interval": 0,
+    "prompt_tokens": 260,
+    "steps": 4,
+    "requests": 12,
+    "locality": 4,
+    "port": 31942,
+    "logprobs": false,
+    "output": "hw3_results/0.8B-tp1-high-off.json"
+  },
+  "duration_s": 6.287587909959257,
+  "median_ttft_ms": 310.68202992901206,
+  "output_tokens_per_s": 7.634088093459521,
+  "completed": 12,
+  "scheduler_rss_bytes": 0,
+  "requests": [
+    {
+      "label": "request-0",
+      "request_id": "6d13cb948cec43ed9827e2da108e8e22",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        2325,
+        13,
+        198,
+        262
+      ],
+      "logprobs": [],
+      "ttft_ms": 302.9811498709023,
+      "latency_ms": 512.745329644531,
+      "token_arrival_ms": [
+        302.9811498709023,
+        375.08836993947625,
+        443.7791397795081,
+        512.7341100014746
+      ]
+    },
+    {
+      "label": "request-1",
+      "request_id": "a61bcbcec0b4467cb04f3e29544a8625",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        84,
+        269,
+        472,
+        220
+      ],
+      "logprobs": [],
+      "ttft_ms": 288.3611498400569,
+      "latency_ms": 495.2296297997236,
+      "token_arrival_ms": [
+        288.3611498400569,
+        357.9146899282932,
+        426.5007097274065,
+        495.21957989782095
+      ]
+    },
+    {
+      "label": "request-2",
+      "request_id": "8cd4579b9b0841d79ea24007416afc7b",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        220,
+        16,
+        15,
+        15
+      ],
+      "logprobs": [],
+      "ttft_ms": 287.2591498307884,
+      "latency_ms": 494.48517011478543,
+      "token_arrival_ms": [
+        287.2591498307884,
+        356.75074020400643,
+        425.4777799360454,
+        494.4771300069988
+      ]
+    },
+    {
+      "label": "request-3",
+      "request_id": "a6c6f82336fb46a5a62978eeccdcf1ac",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        286,
+        310,
+        279,
+        491
+      ],
+      "logprobs": [],
+      "ttft_ms": 289.87132012844086,
+      "latency_ms": 495.9186501801014,
+      "token_arrival_ms": [
+        289.87132012844086,
+        359.10518979653716,
+        427.31950990855694,
+        495.91021006926894
+      ]
+    },
+    {
+      "label": "request-4",
+      "request_id": "a27213c3a2984f298af0637ae3d0f892",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        2325,
+        13,
+        198,
+        262
+      ],
+      "logprobs": [],
+      "ttft_ms": 312.6834901049733,
+      "latency_ms": 536.752010229975,
+      "token_arrival_ms": [
+        312.6834901049733,
+        387.8305200487375,
+        461.97157027199864,
+        536.7427403107285
+      ]
+    },
+    {
+      "label": "request-5",
+      "request_id": "c7ca53156a3f4e3689f447d6d0892516",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        84,
+        269,
+        472,
+        220
+      ],
+      "logprobs": [],
+      "ttft_ms": 313.50428983569145,
+      "latency_ms": 537.1151100844145,
+      "token_arrival_ms": [
+        313.50428983569145,
+        389.47621965780854,
+        464.18283972889185,
+        537.1039998717606
+      ]
+    },
+    {
+      "label": "request-6",
+      "request_id": "94d577af7c9441d186f6c0d2bf8be8fb",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        220,
+        16,
+        15,
+        15
+      ],
+      "logprobs": [],
+      "ttft_ms": 305.15395011752844,
+      "latency_ms": 530.5059803649783,
+      "token_arrival_ms": [
+        305.15395011752844,
+        380.8385203592479,
+        455.52609022706747,
+        530.4944501258433
+      ]
+    },
+    {
+      "label": "request-7",
+      "request_id": "8e1299f2950544719bc1030ace9ad41b",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        286,
+        310,
+        279,
+        491
+      ],
+      "logprobs": [],
+      "ttft_ms": 312.673460226506,
+      "latency_ms": 538.1508399732411,
+      "token_arrival_ms": [
+        312.673460226506,
+        388.28723039478064,
+        463.05595012381673,
+        538.1402801722288
+      ]
+    },
+    {
+      "label": "request-8",
+      "request_id": "78b4843c0b774d6b99ba20d0570aa4ea",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        2325,
+        13,
+        198,
+        262
+      ],
+      "logprobs": [],
+      "ttft_ms": 309.588479809463,
+      "latency_ms": 534.5918498933315,
+      "token_arrival_ms": [
+        309.588479809463,
+        385.0053697824478,
+        459.6561100333929,
+        534.5811196602881
+      ]
+    },
+    {
+      "label": "request-9",
+      "request_id": "4e1b1845296443739df867accc860310",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        84,
+        269,
+        472,
+        220
+      ],
+      "logprobs": [],
+      "ttft_ms": 311.8313602171838,
+      "latency_ms": 538.747469894588,
+      "token_arrival_ms": [
+        311.8313602171838,
+        388.02713016048074,
+        463.25012017041445,
+        538.7369799427688
+      ]
+    },
+    {
+      "label": "request-10",
+      "request_id": "89d393037b514724aeea9ad7c654c3d1",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        220,
+        16,
+        15,
+        15
+      ],
+      "logprobs": [],
+      "ttft_ms": 311.7755800485611,
+      "latency_ms": 537.4867403879762,
+      "token_arrival_ms": [
+        311.7755800485611,
+        387.17340026050806,
+        462.07367023453116,
+        537.4758103862405
+      ]
+    },
+    {
+      "label": "request-11",
+      "request_id": "2a04b0da2ac847f098e6724993a7939b",
+      "prompt_tokens": 260,
+      "cached_tokens": 0,
+      "finish_reason": {
+        "type": "length",
+        "length": 4
+      },
+      "token_ids": [
+        286,
+        310,
+        279,
+        491
+      ],
+      "logprobs": [],
+      "ttft_ms": 311.84185994789004,
+      "latency_ms": 534.0185798704624,
+      "token_arrival_ms": [
+        311.84185994789004,
+        386.4437099546194,
+        460.2289996109903,
+        534.0075399726629
+      ]
+    }
+  ]
+}

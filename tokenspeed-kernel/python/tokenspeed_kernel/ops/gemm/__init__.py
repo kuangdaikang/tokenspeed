@@ -30,13 +30,13 @@ import tokenspeed_kernel.numerics.reference.gemm  # noqa: F401
 import tokenspeed_kernel.ops.gemm.cuda  # noqa: F401
 import tokenspeed_kernel.ops.gemm.flashinfer  # noqa: F401
 import tokenspeed_kernel.ops.gemm.gluon  # noqa: F401
-import tokenspeed_kernel.ops.gemm.gluon_gemv  # noqa: F401
 import tokenspeed_kernel.ops.gemm.ll_bf16  # noqa: F401
 import tokenspeed_kernel.ops.gemm.torch  # noqa: F401
 import tokenspeed_kernel.ops.gemm.triton  # noqa: F401
 import tokenspeed_kernel.ops.gemm.trtllm  # noqa: F401
 import tokenspeed_kernel.ops.gemm.trtllm_cutedsl  # noqa: F401
 import torch
+from tokenspeed_kernel._triton import gluon
 from tokenspeed_kernel.compile_monitor import is_serving
 from tokenspeed_kernel.ops.gemm.flashinfer import (
     BF16_GEMM_MAX_M,
@@ -65,6 +65,9 @@ from tokenspeed_kernel.ops.gemm.linear_attnres_partials import (
 )
 from tokenspeed_kernel.ops.quantization import quantize_fp8
 from tokenspeed_kernel.platform import Platform, pdl_enabled
+
+if gluon is not None:
+    import tokenspeed_kernel.ops.gemm.gluon_gemv  # noqa: F401
 from tokenspeed_kernel.profiling import ShapeCapture, kernel_scope
 from tokenspeed_kernel.registry import KernelRegistry
 from tokenspeed_kernel.selection import (

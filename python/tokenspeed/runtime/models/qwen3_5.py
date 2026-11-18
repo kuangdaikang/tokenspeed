@@ -1041,7 +1041,9 @@ class Qwen3_5ForCausalLM(nn.Module):
         self.mapping = mapping
         self.hidden_size = config.hidden_size
 
-        alt_stream = torch.cuda.Stream()
+        alt_stream = (
+            None if config.model_type == "qwen3_5_text" else torch.cuda.Stream()
+        )
 
         # Embedding layer
         self.embed_tokens = VocabParallelEmbedding(
@@ -1941,9 +1943,21 @@ def fused_qkvzba_split_reshape_cat_contiguous(
         b: [num_v_heads]
         a: [num_v_heads]
     """
-    enable_pdl = pdl_enabled()
     batch, seq_len = mixed_qkvz.shape[0], 1
     qkv_dim_t = num_heads_qk * head_qk * 2 + num_heads_v * head_v
+    if mixed_qkvz.device.type == "npu":
+        mixed_qkv, z = mixed_qkvz.split((qkv_dim_t, num_heads_v * head_v), dim=-1)
+        b, a = mixed_ba.split(num_heads_v, dim=-1)
+        return (
+            mixed_qkv.clone(memory_format=torch.contiguous_format),
+            z.reshape(batch, num_heads_v, head_v).clone(
+                memory_format=torch.contiguous_format
+            ),
+            b.clone(memory_format=torch.contiguous_format),
+            a.clone(memory_format=torch.contiguous_format),
+        )
+
+    enable_pdl = pdl_enabled()
     mixed_qkv = torch.empty(
         [batch * seq_len, qkv_dim_t],
         dtype=mixed_qkvz.dtype,

@@ -269,12 +269,7 @@ class GemmaRMSNorm(torch.nn.Module):
             else:
                 return x
 
-        if _is_amd:
-            if x.shape[0] == 0:
-                if residual is not None:
-                    return x, residual
-                else:
-                    return x
+        if _is_amd or _platform.is_npu:
             orig_dtype = x.dtype
             if residual is not None:
                 x = x + residual
@@ -348,7 +343,7 @@ class GemmaRMSNorm(torch.nn.Module):
         tuple[torch.Tensor, torch.Tensor] | None,
         torch.Tensor,
     ]:
-        if _is_amd:
+        if _is_amd or _platform.is_npu:
             x, residual = self(x, residual)
             return x, None, None, residual
         # The NVFP4 linear's prequantized path returns BF16 whatever the model dtype.

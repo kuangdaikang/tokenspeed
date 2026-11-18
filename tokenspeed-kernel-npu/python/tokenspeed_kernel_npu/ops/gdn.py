@@ -36,7 +36,7 @@ def causal_conv(x, weight, bias, *, state, activation):
     State holds W inputs (including the oldest); only W-1 contribute to the
     next output. Accumulate in FP32 and cast once, matching a BF16 Conv1d.
     """
-    if activation != "silu":
+    if activation not in (None, False, True, "silu", "swish"):
         raise ValueError(f"Unsupported activation: {activation}")
     width = weight.shape[-1]
     history = x.new_zeros(x.shape[0], x.shape[1], width) if state is None else state
@@ -51,23 +51,93 @@ def causal_conv(x, weight, bias, *, state, activation):
         )
     if bias is not None:
         y = y + bias.float()[None, :, None]
-    y = F.silu(y.to(x.dtype))
+    y = y.to(x.dtype)
+    if activation:
+        y = F.silu(y)
     return y, joined[:, :, -width:].contiguous()
 
 
-def _prepare(query, key, value, g, beta, *, qk_l2norm):
+def causal_conv_paged_prefill(
+    x,
+    weight,
+    bias,
+    *,
+    conv_states,
+    boundaries,
+    cache_indices,
+    has_initial_state,
+    activation,
+    pad_slot_id,
+):
+    """Apply convolution to packed tokens using each request's own state row."""
+    output = torch.zeros_like(x)
+    bounds = boundaries.tolist()
+    rows = range(len(bounds) - 1) if cache_indices is None else cache_indices.tolist()
+    warm = has_initial_state.tolist() if has_initial_state is not None else None
+    for i, (row, begin, end) in enumerate(
+        zip(rows, bounds[:-1], bounds[1:], strict=True)
+    ):
+        if row == pad_slot_id or begin == end:
+            continue
+        history = (
+            F.pad(conv_states[row : row + 1], (1, 0))
+            if conv_states is not None and warm is not None and warm[i]
+            else None
+        )
+        out, state = causal_conv(
+            x[None, :, begin:end], weight, bias, state=history, activation=activation
+        )
+        output[:, begin:end].copy_(out[0])
+        if conv_states is not None:
+            conv_states[row].copy_(state[0, :, 1:])
+    return output
+
+
+def causal_conv_paged_update(
+    x,
+    weight,
+    bias,
+    *,
+    conv_states,
+    read_rows,
+    write_rows,
+    activation,
+    pad_slot_id,
+):
+    """Advance paged convolution windows from scheduler input to output rows."""
+    reads = (
+        torch.arange(x.shape[0], device=x.device)
+        if read_rows is None
+        else read_rows.long()
+    )
+    writes = reads if write_rows is None else write_rows.reshape(-1).long()
+    if writes.numel() != reads.numel():
+        raise ValueError("Ascend convolution needs one output block per request")
+    live = (reads != pad_slot_id) & (writes != pad_slot_id)
+    history = conv_states.index_select(0, reads.clamp_min(0))
+    history.masked_fill_(~live[:, None, None], 0)
+    out, state = causal_conv(
+        x, weight, bias, state=F.pad(history, (1, 0)), activation=activation
+    )
+    conv_states.index_copy_(0, writes[live], state[live, :, 1:])
+    return out.masked_fill_(~live[:, None, None], 0)
+
+
+def _prepare(query, key, value, g, beta, *, qk_l2norm, scale):
     q, k, v, decay, b = [
         x.transpose(1, 2).float().contiguous() for x in (query, key, value, g, beta)
     ]
     if qk_l2norm:
         q = q * torch.rsqrt(q.square().sum(-1, keepdim=True) + 1e-6)
         k = k * torch.rsqrt(k.square().sum(-1, keepdim=True) + 1e-6)
-    return q * (q.shape[-1] ** -0.5), k, v, decay, b
+    return q * (q.shape[-1] ** -0.5 if scale is None else scale), k, v, decay, b
 
 
-def gdn_recurrent(query, key, value, g, beta, *, initial_state, qk_l2norm):
+def gdn_recurrent(query, key, value, g, beta, *, initial_state, qk_l2norm, scale=None):
     """Exact delta recurrence; inputs [B,T,H,K/V], state [B,H,V,K]."""
-    q, k, v, decay, b = _prepare(query, key, value, g, beta, qk_l2norm=qk_l2norm)
+    q, k, v, decay, b = _prepare(
+        query, key, value, g, beta, qk_l2norm=qk_l2norm, scale=scale
+    )
     state = (
         v.new_zeros(v.shape[0], v.shape[1], v.shape[-1], k.shape[-1])
         if initial_state is None
@@ -118,7 +188,9 @@ def _unit_lower_inverse(negative_lower):
     return inverse.squeeze(-3)
 
 
-def gdn_chunk(query, key, value, g, beta, *, initial_state, qk_l2norm, chunk_size):
+def gdn_chunk(
+    query, key, value, g, beta, *, initial_state, qk_l2norm, chunk_size, scale=None
+):
     """Parallel intra-chunk GDN with stable block triangular inversion.
 
     Invert [[A,0],[C,D]] as [[Ai,0],[-Di C Ai,Di]], recursively doubling
@@ -127,7 +199,9 @@ def gdn_chunk(query, key, value, g, beta, *, initial_state, qk_l2norm, chunk_siz
     """
     if chunk_size < 1 or chunk_size & (chunk_size - 1):
         raise ValueError("chunk_size must be a positive power of two")
-    q, k, v, decay, b = _prepare(query, key, value, g, beta, qk_l2norm=qk_l2norm)
+    q, k, v, decay, b = _prepare(
+        query, key, value, g, beta, qk_l2norm=qk_l2norm, scale=scale
+    )
     length = q.shape[2]
     padding = (-length) % chunk_size
     q, k, v = [F.pad(x, (0, 0, 0, padding)) for x in (q, k, v)]

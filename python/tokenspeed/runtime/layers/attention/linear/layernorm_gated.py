@@ -139,6 +139,28 @@ def rmsnorm_fn(
     assert N % group_size == 0
     ngroups = N // group_size
     assert weight.shape == (N,)
+    if x.device.type == "npu":
+        if fp8_scale is not None:
+            raise NotImplementedError(
+                "Ascend gated RMSNorm requires an unquantized output"
+            )
+        values = x.float()
+        gate = None
+        if z is not None:
+            gate = (
+                z.float().sigmoid()
+                if sigmoid_gate
+                else torch.nn.functional.silu(z.float())
+            )
+            if not norm_before_gate:
+                values = values * gate
+        groups = values.reshape(M, ngroups, group_size)
+        normalized = groups * torch.rsqrt(groups.square().mean(-1, keepdim=True) + eps)
+        output = normalized.reshape(M, N) * weight.float()
+        if gate is not None and norm_before_gate:
+            output = output * gate
+        return output.to(x.dtype).reshape(x_shape_og)
+
     out = torch.empty_like(
         x, dtype=x.dtype if fp8_scale is None else torch.float8_e4m3fn
     )

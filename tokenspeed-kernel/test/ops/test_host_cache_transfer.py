@@ -1108,17 +1108,30 @@ def test_block_h2d_auto_capability_fallback_persists_across_layers(monkeypatch):
     assert range_transfer.call_count == 2
 
 
-@requires_cuda
-def test_cache_ranges_dma_round_trip_across_multiple_device_buffers():
+@pytest.mark.parametrize(
+    "device",
+    [
+        pytest.param("cuda", marks=requires_cuda),
+        pytest.param(
+            "npu",
+            marks=pytest.mark.skipif(
+                not (hasattr(torch, "npu") and torch.npu.is_available()),
+                reason="requires an Ascend NPU",
+            ),
+        ),
+    ],
+)
+def test_cache_ranges_dma_round_trip_across_multiple_device_buffers(device):
     transfer_cache_ranges = _load_host_transfer_contract_module()._transfer_cache_ranges
 
-    first = torch.arange(64, dtype=torch.uint8, device="cuda")
-    second = torch.arange(48, dtype=torch.bfloat16, device="cuda")
+    first = torch.arange(64, dtype=torch.uint8).to(device)
+    second = torch.arange(48, dtype=torch.bfloat16).to(device)
     second_bytes = second.view(torch.uint8)
     host = torch.zeros(96, dtype=torch.uint8, pin_memory=True)
     ranges = ((0, 8, 0, 24), (1, 16, 48, 32))
-    stream = torch.cuda.Stream()
-    stream.wait_stream(torch.cuda.current_stream())
+    device_module = torch.get_device_module(device)
+    stream = device_module.Stream()
+    stream.wait_stream(device_module.current_stream())
 
     transfer_cache_ranges("d2h", (first, second), host, ranges, stream)
     stream.synchronize()

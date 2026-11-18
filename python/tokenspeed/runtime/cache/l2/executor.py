@@ -53,6 +53,7 @@ so under KVP each rank copies exactly the blocks it owns.
 
 from __future__ import annotations
 
+import json
 import threading
 import time
 from collections.abc import Iterable, Sequence
@@ -98,6 +99,7 @@ from tokenspeed.runtime.cache.transfer.ownership import BlockOwnerTranslation
 from tokenspeed.runtime.execution.forward_step import get_is_capture_mode
 from tokenspeed.runtime.execution.slot_state import SlotStateExporter, SlotStateLayout
 from tokenspeed.runtime.utils import get_colorful_logger, get_device_module
+from tokenspeed.runtime.utils.env import envs
 
 logger = get_colorful_logger(__name__)
 device_module = get_device_module()
@@ -118,6 +120,13 @@ class _AckKind(Enum):
     RESTORE = "RestoreDone"
 
 
+class _TransferTrace(NamedTuple):
+    start: object
+    finish: object
+    rows: list[tuple[int, int, int]]
+    page_bytes: int
+
+
 class _Ack(NamedTuple):
     """The payload of one in-flight Host copy on the completion queue.
 
@@ -130,6 +139,7 @@ class _Ack(NamedTuple):
     kind: _AckKind
     op_ids: list[int]
     backup_pages: list[StoragePage]
+    trace: _TransferTrace | None = None
 
 
 class _PrefetchJob:
@@ -236,6 +246,10 @@ class HostCacheExecutor:
             draft_layout,
             group_ids=scheduler_group_ids or None,
         )
+        self._group_payload_bytes = tuple(
+            sum(field.payload_bytes for field in group.fields)
+            for group in self.layout.groups
+        )
         host_lcm_block_bytes = compute_host_lcm_block_bytes(self.layout)
 
         # --- L2 prefix tier -------------------------------------------------
@@ -321,6 +335,15 @@ class HostCacheExecutor:
             self.blob_arena = allocate_blob_arena(
                 self.max_retracted_requests + 1, self.blob_bytes
             )
+        if envs.TOKENSPEED_HOST_CACHE_TRACE.get():
+            capacity = dict(
+                rank=self.attn_tp_rank,
+                host_lcm_block_bytes=host_lcm_block_bytes,
+                l2_bytes=l2_bytes,
+                snapshot_bytes=snapshot_bytes,
+                slot_arena_bytes=arena_bytes,
+            )
+            logger.info(f"[host_cache_capacity] {json.dumps(capacity)}")
         if l2_tier:
             logger.info(
                 f"Allocated {l2_bytes / 1000000000.0:.2f} GB compact Host L2 ("
@@ -1106,6 +1129,7 @@ class HostCacheExecutor:
                 f"{len(transfers):d}",
             )
         self.write_stream.wait_stream(prerequisite_stream)
+        start = self._start_trace(self.write_stream)
         if transfers:
             self._snapshot_write_lane.start_d2h(
                 transfers,
@@ -1129,15 +1153,17 @@ class HostCacheExecutor:
             )
         finish = device_module.Event()
         finish.record(self.write_stream)
-        self._completions.push(
+        return self._queue_ack(
             finish,
             _Ack(
                 kind=_AckKind.SNAPSHOT,
                 op_ids=[int(op.op_id) for op in ops],
                 backup_pages=[],
             ),
+            stream=self.write_stream,
+            start=start,
+            rows=transfers,
         )
-        return finish
 
     def _start_restore(
         self,
@@ -1168,6 +1194,7 @@ class HostCacheExecutor:
             )
         # Behind the plan's zeroing and store fence on the stream the caller named.
         self.load_stream.wait_stream(prerequisite_stream)
+        start = self._start_trace(self.load_stream)
         if l2_rows:
             self._restore_l2_lane.start_h2d(
                 l2_rows,
@@ -1197,13 +1224,16 @@ class HostCacheExecutor:
             )
         finish = device_module.Event()
         finish.record(self.load_stream)
-        self._completions.push(
+        self._queue_ack(
             finish,
             _Ack(
                 kind=_AckKind.RESTORE,
                 op_ids=[int(op.op_id) for op in ops],
                 backup_pages=[],
             ),
+            stream=self.load_stream,
+            start=start,
+            rows=(*l2_rows, *pool_rows) if start is not None else (),
         )
 
     @staticmethod
@@ -1291,6 +1321,7 @@ class HostCacheExecutor:
                 f"[L2] writeback started: operations={len(op_ids):d} blocks="
                 f"{len(transfers):d} pinned={lane is self._pinned_write_lane!s}",
             )
+        start = self._start_trace(self.write_stream, prerequisite_stream)
         finish = lane.start_d2h(
             transfers,
             device_buffers=self.layout.buffers,
@@ -1300,15 +1331,17 @@ class HostCacheExecutor:
             prerequisite_stream=prerequisite_stream,
             backend=self.transfer_backend,
         )
-        self._completions.push(
+        return self._queue_ack(
             finish,
             _Ack(
                 kind=_AckKind.WRITE_BACK,
                 op_ids=op_ids,
                 backup_pages=backup_pages,
             ),
+            stream=self.write_stream,
+            start=start,
+            rows=transfers,
         )
-        return finish
 
     def _start_loading(
         self,
@@ -1366,6 +1399,7 @@ class HostCacheExecutor:
             if load_index is None:
                 raise RuntimeError("cache transfer layout has no layer consumers")
 
+            start = self._start_trace(self.load_stream, prerequisite_stream)
             device = self.layout.buffers[0].device
             workspace = self._load_workspaces[load_index]
             num_blocks, _ = workspace.load_block_transfers(
@@ -1445,9 +1479,12 @@ class HostCacheExecutor:
                         flat_layer_index += 1
             if finish is None:
                 raise RuntimeError("cache transfer layout has no layer consumers")
-            self._completions.push(
+            self._queue_ack(
                 finish,
                 _Ack(kind=_AckKind.LOAD_BACK, op_ids=op_ids, backup_pages=[]),
+                stream=self.load_stream,
+                start=start,
+                rows=transfers,
             )
             return load_index
         except BaseException as original_error:
@@ -1484,6 +1521,30 @@ class HostCacheExecutor:
                     except BaseException:
                         pass
 
+    def _start_trace(self, stream, prerequisite_stream=None):
+        if not envs.TOKENSPEED_HOST_CACHE_TRACE.get():
+            return None
+        if prerequisite_stream is not None:
+            stream.wait_stream(prerequisite_stream)
+        start = device_module.Event(enable_timing=True)
+        start.record(stream)
+        return start
+
+    def _queue_ack(self, finish, ack, *, stream, start, rows):
+        if start is not None:
+            finish = device_module.Event(enable_timing=True)
+            finish.record(stream)
+            ack = ack._replace(
+                trace=_TransferTrace(
+                    start,
+                    finish,
+                    list(rows),
+                    sum(self._group_payload_bytes[group] for group, _, _ in rows),
+                )
+            )
+        self._completions.push(finish, ack)
+        return finish
+
     def poll_results(self) -> list:
         """The completed ops' ACKs, both tiers; event queries only, never blocks."""
         results: list = []
@@ -1497,6 +1558,17 @@ class HostCacheExecutor:
             )
             self._prefetch_acks.clear()
         for ack in self._completions.pop_ready():
+            if ack.trace is not None:
+                trace = ack.trace
+                payload = dict(
+                    rank=self.attn_tp_rank,
+                    kind=ack.kind.value,
+                    op_ids=ack.op_ids,
+                    page_bytes=trace.page_bytes,
+                    elapsed_ms=trace.start.elapsed_time(trace.finish),
+                    rows=trace.rows,
+                )
+                logger.info(f"[host_cache_copy] {json.dumps(payload)}")
             if ack.kind is _AckKind.WRITE_BACK:
                 # An L2 write with L3 pages is acknowledged after its backup.
                 self._complete_or_queue_write(ack, results)

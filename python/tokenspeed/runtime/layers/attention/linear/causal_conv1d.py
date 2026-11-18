@@ -465,10 +465,27 @@ def causal_conv1d_fn(
 
     out: same shape as `x`
     """
-    enable_pdl = pdl_enabled()
     if isinstance(activation, bool) and activation:
         activation = "silu"
 
+    if x.device.type == "npu":
+        from tokenspeed_kernel.ops.attention.qwen35.ascend import (
+            causal_conv_paged_prefill,
+        )
+
+        return causal_conv_paged_prefill(
+            x,
+            weight,
+            bias,
+            conv_states=conv_states,
+            boundaries=query_start_loc,
+            cache_indices=cache_indices,
+            has_initial_state=has_initial_state,
+            activation=activation,
+            pad_slot_id=pad_slot_id,
+        )
+
+    enable_pdl = pdl_enabled()
     out = torch.empty_like(x)
     batch_ptr = prefill_metadata.batch_indices
     token_chunk_offset_ptr = prefill_metadata.chunk_offsets
@@ -1093,6 +1110,36 @@ def causal_conv1d_update(
         negative) instead of token t - 1.
     out: (batch, dim) or (batch, dim, seqlen)
     """
+    if x.device.type == "npu":
+        from tokenspeed_kernel.ops.attention.qwen35.ascend import (
+            causal_conv_paged_update,
+        )
+
+        if any(
+            item is not None
+            for item in (
+                parent_indices,
+                cache_seqlens,
+                num_accepted_tokens,
+                intermediate_conv_window,
+            )
+        ):
+            raise ValueError(
+                "Ascend convolution needs linear paging with one output row per request"
+            )
+        unsqueeze = x.ndim == 2
+        out = causal_conv_paged_update(
+            x.unsqueeze(-1) if unsqueeze else x,
+            weight,
+            bias,
+            conv_states=conv_state,
+            read_rows=conv_state_indices,
+            write_rows=output_state_indices,
+            activation=activation,
+            pad_slot_id=pad_slot_id,
+        )
+        return out.squeeze(-1) if unsqueeze else out
+
     enable_pdl = pdl_enabled()
     if parent_indices is not None:
         tree_tables_ok = (

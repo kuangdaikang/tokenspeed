@@ -83,7 +83,8 @@ class HcclBackend(CommBackend):
         if len(group) == 1:
             output.copy_(input)
             return
-        dist.all_gather_single(output, input, group=self._process_group(group))
+        gather = getattr(dist, "all_gather_single", None) or dist.all_gather_into_tensor
+        gather(output, input, group=self._process_group(group))
 
     def reduce_scatter(self, tensor: torch.Tensor, group: Group) -> torch.Tensor:
         if len(group) == 1:
@@ -93,7 +94,10 @@ class HcclBackend(CommBackend):
             dtype=tensor.dtype,
             device=tensor.device,
         )
-        dist.reduce_scatter_single(output, tensor, group=self._process_group(group))
+        scatter = (
+            getattr(dist, "reduce_scatter_single", None) or dist.reduce_scatter_tensor
+        )
+        scatter(output, tensor, group=self._process_group(group))
         return output
 
     def all_to_all_single(
